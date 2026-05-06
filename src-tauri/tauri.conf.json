@@ -1,0 +1,56 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Clockly",
+  "version": "1.0.0",
+  "identifier": "com.bluewizardz.clockly",
+  "build": {
+    "frontendDist": "../website"
+  },
+  "app": {
+    "withGlobalTauri": false,
+    "windows": [
+      {
+        "title": "Clockly",
+        "width": 1100,
+        "height": 720,
+        "minWidth": 400,
+        "minHeight": 500,
+        "resizable": true,
+        "fullscreen": false,
+        "decorations": true,
+        "transparent": false,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "linux": {
+      "deb": {
+        "depends": []
+      },
+      "rpm": {
+        "release": "1",
+        "epoch": 0,
+        "depends": []
+      },
+      "appimage": {
+        "bundleMediaFramework": false
+      }
+    },
+    "category": "Utility",
+    "shortDescription": "A lightweight time management suite",
+    "longDescription": "Clockly is a beautiful, lightweight time management suite featuring Clock, Alarm, Timer, and Stopwatch tools. All data is stored locally."
+  }
+}

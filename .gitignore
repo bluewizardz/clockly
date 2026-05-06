@@ -1,0 +1,13 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Rust / Cargo build artifacts
+src-tauri/target/
+
+# Tauri generated files
+src-tauri/gen/
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,7 +1,7 @@
 # Maintainer: bluewizardz <your@email.com>
 pkgname=clockly
 pkgver=1.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A lightweight time management suite featuring Clock, Alarm, Timer, and Stopwatch"
 arch=('x86_64')
 url="https://github.com/bluewizardz/clockly"
@@ -43,10 +43,10 @@ package() {
     cd "$pkgname"
 
     local _binary="src-tauri/target/release/clockly"
-    local _tauri_dir="src-tauri/target/release/bundle"
 
     # Install main binary
     install -Dm755 "$_binary" "$pkgdir/usr/bin/$pkgname"
+    strip --strip-unneeded "$pkgdir/usr/bin/$pkgname" 2>/dev/null || true
 
     # Install desktop entry
     install -Dm644 "src-tauri/gen/linux/$pkgname.desktop" \
@@ -63,19 +63,10 @@ Keywords=clock;timer;stopwatch;alarm;time;
 StartupWMClass=clockly
 EOF
 
-    # Install icons (multiple sizes if available)
-    for _size in 32 128 256; do
-        local _icon="src-tauri/icons/${_size}x${_size}.png"
-        if [[ -f "$_icon" ]]; then
-            install -Dm644 "$_icon" \
-                "$pkgdir/usr/share/icons/hicolor/${_size}x${_size}/apps/$pkgname.png"
-        fi
-    done
-
-    # Fallback: install the largest available icon
-    if [[ -f "src-tauri/icons/128x128@2x.png" ]]; then
-        install -Dm644 "src-tauri/icons/128x128@2x.png" \
-            "$pkgdir/usr/share/icons/hicolor/256x256/apps/$pkgname.png"
+    # Install a single launcher icon to keep the package small.
+    if [[ -f "src-tauri/icons/128x128.png" ]]; then
+        install -Dm644 "src-tauri/icons/128x128.png" \
+            "$pkgdir/usr/share/icons/hicolor/128x128/apps/$pkgname.png"
     fi
 
     # Install license if present

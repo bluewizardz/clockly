@@ -52,6 +52,40 @@
       --font: 'Inter', system-ui, -apple-system, sans-serif;
     }
 
+    /* ===== LIGHT MODE ===== */
+    html.light {
+      --surface: #f5f5f5;
+      --surface-dim: #e8e8e8;
+      --surface-bright: #ffffff;
+      --surface-container-lowest: #ffffff;
+      --surface-container-low: #efefef;
+      --surface-container: #e9e9e9;
+      --surface-container-high: #dedede;
+      --surface-container-highest: #d3d3d3;
+      --on-surface: #1a1c1e;
+      --on-surface-variant: #40484f;
+      --outline: #70787f;
+      --outline-variant: #c0c8cf;
+      --primary: #006494;
+      --on-primary: #ffffff;
+      --primary-container: #cce5ff;
+      --on-primary-container: #001e30;
+      --secondary: #006c42;
+      --on-secondary: #ffffff;
+      --secondary-container: #9ef5b8;
+      --on-secondary-container: #002111;
+      --tertiary: #555657;
+      --on-tertiary: #ffffff;
+      --error: #ba1a1a;
+      --on-error: #ffffff;
+      --error-container: #ffdad6;
+      --on-error-container: #410002;
+      --background: #f5f5f5;
+      --on-background: #1a1c1e;
+      --surface-variant: #dde3ea;
+      --surface-tint: #006494;
+    }
+
     /* ===== TYPOGRAPHY ===== */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
@@ -189,11 +223,15 @@
       background: var(--surface-container);
       border-right: 1px solid var(--outline-variant);
       padding-top: 80px;
+      overflow-y: auto;
+      overflow-x: hidden;
     }
+    .sidebar::-webkit-scrollbar { width: 3px; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--outline-variant); border-radius: 4px; }
 
     .sidebar-header {
       padding: 0 8px;
-      margin-bottom: 32px
+      margin-bottom: 16px
     }
 
     .sidebar-header h2 {
@@ -248,6 +286,284 @@
       text-align: center
     }
 
+    /* ===== TASKS PANEL ===== */
+    .tasks-panel {
+      margin-top: auto;
+      border-top: 1px solid var(--outline-variant);
+      padding: 12px 4px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex-shrink: 0;
+      min-width: 0;
+    }
+
+    .tasks-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 4px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .tasks-panel-title {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--on-surface-variant);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .tasks-badge {
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+      border-radius: 9999px;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 7px;
+      min-width: 18px;
+      text-align: center;
+      display: inline-block;
+    }
+
+    .tasks-chevron {
+      font-size: 12px;
+      color: var(--outline);
+      transition: transform .3s;
+    }
+
+    .tasks-chevron.open {
+      transform: rotate(180deg);
+    }
+
+    .tasks-body {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      overflow: hidden;
+      transition: max-height .4s cubic-bezier(.4,0,.2,1), opacity .3s;
+      max-height: 0;
+      opacity: 0;
+      min-width: 0;
+    }
+
+    .tasks-body.open {
+      max-height: 380px;
+      opacity: 1;
+      overflow-y: auto;
+    }
+
+    .tasks-input-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .tasks-input {
+      flex: 1;
+      min-width: 0;
+      background: var(--surface-container-high);
+      border: 1px solid var(--outline-variant);
+      border-radius: 8px;
+      color: var(--on-surface);
+      font-size: 12px;
+      font-family: var(--font);
+      padding: 6px 8px;
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    .tasks-input:focus {
+      border-color: var(--primary);
+    }
+
+    .tasks-add-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      border: none;
+      background: var(--primary);
+      color: var(--on-primary);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: filter .2s, transform .1s;
+      font-family: var(--font);
+    }
+
+    .tasks-add-btn:hover { filter: brightness(1.15); }
+    .tasks-add-btn:active { transform: scale(.9); }
+
+    .tasks-list {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      max-height: 200px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-right: 2px;
+      min-width: 0;
+    }
+
+    .tasks-list::-webkit-scrollbar { width: 3px; }
+    .tasks-list::-webkit-scrollbar-thumb { background: var(--outline-variant); border-radius: 4px; }
+
+    .task-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      padding: 5px 6px;
+      border-radius: 6px;
+      background: var(--surface-container-low);
+      border: 1px solid transparent;
+      transition: background .2s, border-color .2s;
+      animation: taskSlideIn .25s ease;
+      min-width: 0;
+    }
+
+    @keyframes taskSlideIn {
+      from { opacity: 0; transform: translateX(-8px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .task-item:hover {
+      background: var(--surface-container-high);
+      border-color: var(--outline-variant);
+    }
+
+    .task-item.done {
+      opacity: .55;
+    }
+
+    /* Custom checkbox */
+    .task-checkbox-wrap {
+      position: relative;
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .task-checkbox-wrap input[type="checkbox"] {
+      position: absolute;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .task-checkbox-vis {
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      border: 2px solid var(--outline);
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .2s, border-color .2s;
+      pointer-events: none;
+    }
+
+    .task-checkbox-wrap input:checked ~ .task-checkbox-vis {
+      background: var(--secondary-container);
+      border-color: var(--secondary-container);
+    }
+
+    .task-checkbox-vis::after {
+      content: '';
+      width: 5px;
+      height: 8px;
+      border: 2px solid var(--on-secondary-container);
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg) translateY(-1px);
+      opacity: 0;
+      transition: opacity .15s;
+    }
+
+    .task-checkbox-wrap input:checked ~ .task-checkbox-vis::after {
+      opacity: 1;
+    }
+
+    .task-text {
+      flex: 1;
+      min-width: 0;
+      font-size: 12px;
+      line-height: 1.35;
+      color: var(--on-surface);
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      white-space: normal;
+      transition: color .2s, text-decoration .2s;
+    }
+
+    .task-item.done .task-text {
+      text-decoration: line-through;
+      color: var(--on-surface-variant);
+    }
+
+    .task-del-btn {
+      background: none;
+      border: none;
+      color: var(--outline-variant);
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1;
+      padding: 0 2px;
+      opacity: 0;
+      transition: color .2s, opacity .2s;
+      flex-shrink: 0;
+    }
+
+    .task-item:hover .task-del-btn { opacity: 1; }
+    .task-del-btn:hover { color: var(--error); }
+
+    .tasks-empty {
+      text-align: center;
+      padding: 12px 4px;
+      font-size: 12px;
+      color: var(--on-surface-variant);
+      opacity: .5;
+    }
+
+    .tasks-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2px;
+    }
+
+    .tasks-footer-count {
+      font-size: 11px;
+      color: var(--outline);
+      letter-spacing: 0.05em;
+    }
+
+    .tasks-clear-done {
+      background: none;
+      border: none;
+      color: var(--outline);
+      font-size: 11px;
+      cursor: pointer;
+      font-family: var(--font);
+      letter-spacing: 0.05em;
+      transition: color .2s;
+      padding: 0;
+    }
+
+    .tasks-clear-done:hover { color: var(--error); }
+
     /* ===== BOTTOM NAV (Mobile) ===== */
     .bottom-nav {
       position: fixed;
@@ -258,7 +574,7 @@
       display: flex;
       justify-content: space-around;
       align-items: center;
-      padding: 8px 16px;
+      padding: 6px 4px;
       background: var(--surface);
       border-top: 1px solid var(--outline-variant);
     }
@@ -267,17 +583,20 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2px;
+      gap: 1px;
       color: var(--on-surface-variant);
       text-decoration: none;
-      font-size: 12px;
-      letter-spacing: 0.1em;
+      font-size: 9px;
+      letter-spacing: 0.04em;
       font-weight: 700;
       text-transform: uppercase;
       transition: all .15s;
       cursor: pointer;
-      padding: 4px 12px;
-      border-radius: 20px;
+      padding: 4px 6px;
+      border-radius: 12px;
+      min-width: 0;
+      flex: 1;
+      max-width: 72px;
     }
 
     .bottom-nav a:active {
@@ -290,7 +609,7 @@
     }
 
     .bottom-nav a .icon {
-      font-size: 22px
+      font-size: 19px
     }
 
     /* ===== MAIN CANVAS ===== */
@@ -526,18 +845,13 @@
     @media(max-width:767px) {
       /* Wrap wide control rows for small screens */
       #timerInput,
-      #page-stopwatch section:first-of-type > div:last-of-type,
-      #page-alarm section:first-of-type > div > div:nth-of-type(2) {
+      #page-stopwatch section:first-of-type > div:last-of-type {
         flex-wrap: wrap;
         justify-content: center;
       }
 
       #page-stopwatch section:first-of-type {
         padding: 32px 0;
-      }
-
-      #page-alarm section:first-of-type > div > div:nth-of-type(2) {
-        gap: 16px;
       }
 
       /* Stack lap section columns */
@@ -555,6 +869,52 @@
         padding-left: 12px;
         padding-right: 12px;
         padding-bottom: 96px;
+      }
+
+      /* Prevent cards/sections from overflowing horizontally */
+      .card, section { min-width: 0; box-sizing: border-box; }
+
+      /* ===== ALARM PAGE MOBILE ===== */
+      /* Shrink time picker inputs */
+      #alarmHour, #alarmMinute {
+        width: 72px !important;
+        font-size: clamp(28px, 10vw, 48px) !important;
+        padding: 6px !important;
+      }
+      /* Allow time picker row to wrap and centre */
+      #page-alarm section.card > div > div:first-of-type {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px !important;
+      }
+      /* Smaller AM/PM buttons */
+      #amBtn, #pmBtn {
+        padding: 6px 10px !important;
+        font-size: 11px !important;
+      }
+      /* Options grid: single column */
+      #page-alarm section.card > div > div:nth-of-type(2) {
+        grid-template-columns: 1fr !important;
+      }
+      /* Day buttons: shrink to fit all 7 in one row */
+      .day-btn {
+        width: 30px !important;
+        height: 30px !important;
+        font-size: 11px !important;
+      }
+      #repeatDays { gap: 2px !important; }
+      /* Save alarm button: full width */
+      #page-alarm section.card .btn-primary {
+        min-width: unset !important;
+        width: 100% !important;
+        font-size: 15px !important;
+        padding: 12px 16px !important;
+      }
+      /* Alarm list: tighter padding */
+      #alarmList .card { padding: 16px 12px !important; }
+      /* Alarm time text: scale down */
+      #alarmList .display-lg {
+        font-size: clamp(24px, 8vw, 40px) !important;
       }
     }
 
@@ -620,7 +980,117 @@
       display: flex
     }
 
-    /* ===== ALARM MODAL ===== */
+    /* ===== SETTINGS MODAL ===== */
+    .settings-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 95;
+      background: rgba(0,0,0,.6);
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    .settings-overlay.active { display: flex; }
+    .settings-box {
+      background: var(--surface-container);
+      border: 1px solid var(--outline-variant);
+      border-radius: 20px;
+      padding: 28px 24px;
+      width: min(420px, 92vw);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .settings-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .settings-close {
+      background: none;
+      border: none;
+      color: var(--on-surface-variant);
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 8px;
+      transition: background .2s;
+    }
+    .settings-close:hover { background: var(--surface-container-high); }
+    .settings-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .settings-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--on-surface-variant);
+    }
+    .settings-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface-container-high);
+      border-radius: 10px;
+      padding: 12px 16px;
+    }
+    .settings-row-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--on-surface);
+    }
+    .settings-row-sub {
+      font-size: 11px;
+      color: var(--on-surface-variant);
+      margin-top: 2px;
+    }
+    /* Segmented control */
+    .seg-ctrl {
+      display: flex;
+      background: var(--surface-container-highest);
+      border-radius: 8px;
+      padding: 2px;
+      gap: 2px;
+    }
+    .seg-btn {
+      padding: 5px 14px;
+      border-radius: 6px;
+      border: none;
+      background: transparent;
+      color: var(--on-surface-variant);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: all .2s;
+    }
+    .seg-btn.active {
+      background: var(--primary);
+      color: var(--on-primary);
+    }
+    /* Accent swatches */
+    .accent-swatches {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .accent-swatch {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform .2s, border-color .2s;
+    }
+    .accent-swatch:hover { transform: scale(1.15); }
+    .accent-swatch.active { border-color: var(--on-surface); transform: scale(1.1); }
     .modal-overlay {
       display: none;
       position: fixed;
@@ -686,6 +1156,29 @@
         <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="width:1em;height:1em;fill:currentColor"><path d="M264.5 64C251.2 64 240.5 74.7 240.5 88C240.5 101.3 251.2 112 264.5 112L296.5 112L296.5 137.3C188.5 149.2 104.5 240.8 104.5 352C104.5 471.3 201.2 568 320.5 568C439.8 568 536.5 471.3 536.5 352C536.5 312.2 525.7 274.9 506.9 242.8L535.1 214.6C547.6 202.1 547.6 181.8 535.1 169.3C522.6 156.8 502.3 156.8 489.8 169.3L466.4 192.7C433.5 162.5 391.2 142.4 344.4 137.2L344.4 111.9L376.4 111.9C389.7 111.9 400.4 101.2 400.4 87.9C400.4 74.6 389.7 63.9 376.4 63.9L264.4 63.9zM344.5 248L344.5 352C344.5 365.3 333.8 376 320.5 376C307.2 376 296.5 365.3 296.5 352L296.5 248C296.5 234.7 307.2 224 320.5 224C333.8 224 344.5 234.7 344.5 248z"/></svg></span><span>Stopwatch</span>
       </a>
     </nav>
+
+    <!-- ===== TASKS PANEL (Sidebar) ===== -->
+    <div class="tasks-panel" id="tasksSidebarPanel">
+      <div class="tasks-panel-header" id="tasksPanelToggle">
+        <span class="tasks-panel-title">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="width:1em;height:1em;fill:currentColor;flex-shrink:0"><path d="M224 96C224 60.7 252.7 32 288 32H352C387.3 32 416 60.7 416 96H480C515.3 96 544 124.7 544 160V544C544 579.3 515.3 608 480 608H160C124.7 608 96 579.3 96 544V160C96 124.7 124.7 96 160 96H224zM288 80C279.2 80 272 87.2 272 96C272 104.8 279.2 112 288 112H352C360.8 112 368 104.8 368 96C368 87.2 360.8 80 352 80H288zM224 352C224 339.3 213.3 328 200 328C186.7 328 176 338.7 176 352C176 365.3 186.7 376 200 376C213.3 376 224 365.3 224 352zM200 232C186.7 232 176 242.7 176 256C176 269.3 186.7 280 200 280C213.3 280 224 269.3 224 256C224 242.7 213.3 232 200 232zM200 424C186.7 424 176 434.7 176 448C176 461.3 186.7 472 200 472C213.3 472 224 461.3 224 448C224 434.7 213.3 424 200 424zM272 240C263.2 240 256 247.2 256 256C256 264.8 263.2 272 272 272H432C440.8 272 448 264.8 448 256C448 247.2 440.8 240 432 240H272zM272 336C263.2 336 256 343.2 256 352C256 360.8 263.2 368 272 368H432C440.8 368 448 360.8 448 352C448 343.2 440.8 336 432 336H272zM272 432C263.2 432 256 439.2 256 448C256 456.8 263.2 464 272 464H432C440.8 464 448 456.8 448 448C448 439.2 440.8 432 432 432H272z"/></svg>
+          Tasks
+          <span class="tasks-badge" id="tasksBadge">0</span>
+        </span>
+        <span class="tasks-chevron" id="tasksChevron">▾</span>
+      </div>
+      <div class="tasks-body" id="tasksBody">
+        <div class="tasks-input-row">
+          <input type="text" class="tasks-input" id="taskInput" placeholder="Add a task…" maxlength="80" />
+          <button class="tasks-add-btn" id="taskAddBtn" title="Add task">+</button>
+        </div>
+        <div class="tasks-list custom-scroll" id="taskList"></div>
+        <div class="tasks-footer" id="tasksFooter">
+          <span class="tasks-footer-count" id="tasksFooterCount"></span>
+          <button class="tasks-clear-done" id="tasksClearDone">Clear done</button>
+        </div>
+      </div>
+    </div>
   </aside>
 
   <!-- ===== BOTTOM NAV (Mobile) ===== -->
@@ -700,7 +1193,10 @@
       <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="width:1em;height:1em;fill:currentColor"><path d="M152 64C138.7 64 128 74.7 128 88C128 101.3 138.7 112 152 112L160 112L160 131C160 171.3 176 210 204.5 238.5L286 320L204.5 401.5C176 430 160 468.7 160 509L160 528L152 528C138.7 528 128 538.7 128 552C128 565.3 138.7 576 152 576L488 576C501.3 576 512 565.3 512 552C512 538.7 501.3 528 488 528L480 528L480 509C480 468.7 464 430 435.5 401.5L354 320L435.5 238.5C464 210 480 171.3 480 131L480 112L488 112C501.3 112 512 101.3 512 88C512 74.7 501.3 64 488 64L152 64zM320 353.9L401.5 435.4C421 455 432 481.4 432 509L432 528L208 528L208 509C208 481.4 219 455 238.5 435.5L320 353.9zM320 286L238.5 204.5C219 185 208 158.6 208 131L208 112L432 112L432 131C432 158.6 421 185 401.5 204.5L320 286.1z"/></svg></span><span>Timer</span>
     </a>
     <a href="#" data-page="stopwatch">
-      <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="width:1em;height:1em;fill:currentColor"><path d="M264.5 64C251.2 64 240.5 74.7 240.5 88C240.5 101.3 251.2 112 264.5 112L296.5 112L296.5 137.3C188.5 149.2 104.5 240.8 104.5 352C104.5 471.3 201.2 568 320.5 568C439.8 568 536.5 471.3 536.5 352C536.5 312.2 525.7 274.9 506.9 242.8L535.1 214.6C547.6 202.1 547.6 181.8 535.1 169.3C522.6 156.8 502.3 156.8 489.8 169.3L466.4 192.7C433.5 162.5 391.2 142.4 344.4 137.2L344.4 111.9L376.4 111.9C389.7 111.9 400.4 101.2 400.4 87.9C400.4 74.6 389.7 63.9 376.4 63.9L264.4 63.9zM344.5 248L344.5 352C344.5 365.3 333.8 376 320.5 376C307.2 376 296.5 365.3 296.5 352L296.5 248C296.5 234.7 307.2 224 320.5 224C333.8 224 344.5 234.7 344.5 248z"/></svg></span><span>Stopwatch</span>
+      <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="width:1em;height:1em;fill:currentColor"><path d="M264.5 64C251.2 64 240.5 74.7 240.5 88C240.5 101.3 251.2 112 264.5 112L296.5 112L296.5 137.3C188.5 149.2 104.5 240.8 104.5 352C104.5 471.3 201.2 568 320.5 568C439.8 568 536.5 471.3 536.5 352C536.5 312.2 525.7 274.9 506.9 242.8L535.1 214.6C547.6 202.1 547.6 181.8 535.1 169.3C522.6 156.8 502.3 156.8 489.8 169.3L466.4 192.7C433.5 162.5 391.2 142.4 344.4 137.2L344.4 111.9L376.4 111.9C389.7 111.9 400.4 101.2 400.4 87.9C400.4 74.6 389.7 63.9 376.4 63.9L264.4 63.9zM344.5 248L344.5 352C344.5 365.3 333.8 376 320.5 376C307.2 376 296.5 365.3 296.5 352L296.5 248C296.5 234.7 307.2 224 320.5 224C333.8 224 344.5 234.7 344.5 248z"/></svg></span><span>Watch</span>
+    </a>
+    <a href="#" data-page="tasks">
+      <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="width:1em;height:1em;fill:currentColor"><path d="M224 96C224 60.7 252.7 32 288 32H352C387.3 32 416 60.7 416 96H480C515.3 96 544 124.7 544 160V544C544 579.3 515.3 608 480 608H160C124.7 608 96 579.3 96 544V160C96 124.7 124.7 96 160 96H224zM288 80C279.2 80 272 87.2 272 96C272 104.8 279.2 112 288 112H352C360.8 112 368 104.8 368 96C368 87.2 360.8 80 352 80H288zM224 352C224 339.3 213.3 328 200 328C186.7 328 176 338.7 176 352C176 365.3 186.7 376 200 376C213.3 376 224 365.3 224 352zM200 232C186.7 232 176 242.7 176 256C176 269.3 186.7 280 200 280C213.3 280 224 269.3 224 256C224 242.7 213.3 232 200 232zM200 424C186.7 424 176 434.7 176 448C176 461.3 186.7 472 200 472C213.3 472 224 461.3 224 448C224 434.7 213.3 424 200 424zM272 240C263.2 240 256 247.2 256 256C256 264.8 263.2 272 272 272H432C440.8 272 448 264.8 448 256C448 247.2 440.8 240 432 240H272zM272 336C263.2 336 256 343.2 256 352C256 360.8 263.2 368 272 368H432C440.8 368 448 360.8 448 352C448 343.2 440.8 336 432 336H272zM272 432C263.2 432 256 439.2 256 448C256 456.8 263.2 464 272 464H432C440.8 464 448 456.8 448 448C448 439.2 440.8 432 432 432H272z"/></svg></span><span>Tasks</span>
     </a>
   </nav>
 
@@ -708,6 +1204,75 @@
   <div class="fullscreen-overlay" id="fullscreenOverlay" onclick="toggleFullscreen()">
     <div class="display-huge tabular" style="color:var(--primary)" id="fullscreenTime">00:00:00</div>
     <div class="display-lg" style="margin-top:16px;opacity:.7" id="fullscreenDate"></div>
+  </div>
+
+  <!-- ===== SETTINGS MODAL ===== -->
+  <div class="settings-overlay" id="settingsOverlay">
+    <div class="settings-box">
+      <div class="settings-title">
+        ⚙ Settings
+        <button class="settings-close" id="settingsCloseBtn" title="Close">✕</button>
+      </div>
+
+      <!-- Theme -->
+      <div class="settings-section">
+        <div class="settings-label">Appearance</div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-row-label">Theme</div>
+            <div class="settings-row-sub">Switch between dark and light mode</div>
+          </div>
+          <div class="seg-ctrl" id="themeSegCtrl">
+            <button class="seg-btn active" id="themeDarkBtn" onclick="setTheme('dark')">Dark</button>
+            <button class="seg-btn" id="themeLightBtn" onclick="setTheme('light')">Light</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Clock Format -->
+      <div class="settings-section">
+        <div class="settings-label">Clock</div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-row-label">Time Format</div>
+            <div class="settings-row-sub">Choose 12-hour or 24-hour display</div>
+          </div>
+          <div class="seg-ctrl" id="fmtSegCtrl">
+            <button class="seg-btn active" id="fmt12Btn" onclick="setClockFormat('12')">12h</button>
+            <button class="seg-btn" id="fmt24Btn" onclick="setClockFormat('24')">24h</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accent Colour -->
+      <div class="settings-section">
+        <div class="settings-label">Accent Colour</div>
+        <div class="accent-swatches" id="accentSwatches">
+          <div class="accent-swatch active" data-accent="blue"   style="background:#95ccff" title="Sky Blue"  onclick="setAccent('blue','#95ccff','#003353')"></div>
+          <div class="accent-swatch"        data-accent="indigo" style="background:#8fa8ff" title="Indigo"    onclick="setAccent('indigo','#8fa8ff','#00105e')"></div>
+          <div class="accent-swatch"        data-accent="purple" style="background:#c9a8ff" title="Purple"    onclick="setAccent('purple','#c9a8ff','#2d004f')"></div>
+          <div class="accent-swatch"        data-accent="pink"   style="background:#ff9dc8" title="Pink"      onclick="setAccent('pink','#ff9dc8','#3e0025')"></div>
+          <div class="accent-swatch"        data-accent="rose"   style="background:#ff6f91" title="Rose"      onclick="setAccent('rose','#ff6f91','#400015')"></div>
+          <div class="accent-swatch"        data-accent="red"    style="background:#ff8a80" title="Red"       onclick="setAccent('red','#ff8a80','#410002')"></div>
+          <div class="accent-swatch"        data-accent="orange" style="background:#ffb86c" title="Orange"    onclick="setAccent('orange','#ffb86c','#3d1e00')"></div>
+          <div class="accent-swatch"        data-accent="gold"   style="background:#f5d060" title="Gold"      onclick="setAccent('gold','#f5d060','#3a2900')"></div>
+          <div class="accent-swatch"        data-accent="lime"   style="background:#b5e84a" title="Lime"      onclick="setAccent('lime','#b5e84a','#1e3300')"></div>
+          <div class="accent-swatch"        data-accent="green"  style="background:#75db95" title="Green"     onclick="setAccent('green','#75db95','#003518')"></div>
+          <div class="accent-swatch"        data-accent="teal"   style="background:#4dd9c0" title="Teal"      onclick="setAccent('teal','#4dd9c0','#002920')"></div>
+          <div class="accent-swatch"        data-accent="cyan"   style="background:#80d8ef" title="Cyan"      onclick="setAccent('cyan','#80d8ef','#001f27')"></div>
+        </div>
+      </div>
+
+      <!-- About -->
+      <div class="settings-section">
+        <div class="settings-label">About</div>
+        <div class="settings-row" style="flex-direction:column;align-items:flex-start;gap:4px">
+          <div class="settings-row-label">Clockly</div>
+          <div class="settings-row-sub">Time Management Suite &nbsp;·&nbsp; v1.0</div>
+          <div class="settings-row-sub">All data stored locally in your browser.</div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- ===== ALARM RING MODAL ===== -->
@@ -1012,6 +1577,28 @@
       </section>
     </div>
 
+    <!-- ===== TASKS PAGE (mobile full page) ===== -->
+    <div class="page" id="page-tasks">
+      <section class="card" style="width:100%;margin-bottom:24px">
+        <h2 class="headline-md" style="color:var(--primary);margin-bottom:20px">Tasks</h2>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px">
+          <input type="text" id="taskInputPage" placeholder="Add a task…" maxlength="80"
+            style="flex:1;background:var(--surface-container-high);border:1px solid var(--outline-variant);border-radius:8px;color:var(--on-surface);font-size:15px;font-family:var(--font);padding:10px 14px;outline:none;transition:border-color .2s"
+            onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--outline-variant)'" />
+          <button id="taskAddBtnPage"
+            style="width:42px;height:42px;border-radius:8px;border:none;background:var(--primary);color:var(--on-primary);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:filter .2s"
+            title="Add task">+</button>
+        </div>
+        <div id="taskListPage" class="custom-scroll"
+          style="display:flex;flex-direction:column;gap:6px;max-height:60vh;overflow-y:auto"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding:0 2px">
+          <span style="font-size:12px;color:var(--outline)" id="tasksPageCount"></span>
+          <button id="tasksClearDonePage"
+            style="background:none;border:none;color:var(--outline);font-size:12px;cursor:pointer;font-family:var(--font);transition:color .2s"
+            onmouseover="this.style.color='var(--error)'" onmouseout="this.style.color='var(--outline)'">Clear done</button>
+        </div>
+      </section>
+    </div>
     <script>
       document.addEventListener('DOMContentLoaded', () => {
       // ===== NAVIGATION =====
@@ -1021,29 +1608,54 @@
         document.querySelectorAll('[data-page]').forEach(a => {
           a.classList.toggle('active', a.dataset.page === pageName);
         });
+        localStorage.setItem('clockly_page', pageName);
       }
       document.querySelectorAll('[data-page]').forEach(a => {
         a.addEventListener('click', e => { e.preventDefault(); switchPage(a.dataset.page); });
       });
+      // Restore last active page
+      const savedPage = localStorage.getItem('clockly_page');
+      if (savedPage && document.getElementById('page-' + savedPage)) switchPage(savedPage);
 
       // ===== DECLARE ALL STATE VARIABLES FIRST =====
       let alarms = JSON.parse(localStorage.getItem('clockly_alarms') || '[]');
       let alarmAmPm = 'AM', ringingAlarmId = null, alarmAudioCtx = null, alarmRingInterval = null;
       let isFullscreen = false;
-      let timerState = 'idle', timerInterval = null, timerRemaining = 0, timerTotal = 0, timerAudioCtx = null, timerRingInterval = null, isTimerRinging = false;
+      // Timer — restore saved state (paused only; never auto-resume running)
+      const _timerSaved = JSON.parse(localStorage.getItem('clockly_timer') || 'null');
+      let timerState = 'idle', timerInterval = null;
+      let timerRemaining = _timerSaved ? _timerSaved.remaining : 0;
+      let timerTotal    = _timerSaved ? _timerSaved.total    : 0;
+      let timerAudioCtx = null, timerRingInterval = null, isTimerRinging = false;
+      // Stopwatch — in-memory only, resets on page load
       let swRunning = false, swStartTime = 0, swElapsed = 0, swAnimFrame = null, swLaps = [], swLastLapTime = 0;
+      // Settings
+      let clockFormat = localStorage.getItem('clockly_fmt') || '24';
+      let currentTheme = localStorage.getItem('clockly_theme') || 'dark';
+      let currentAccent = localStorage.getItem('clockly_accent') || 'blue';
 
       // ===== CLOCK =====
       const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
       const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       function updateClock() {
         const now = new Date();
-        const h = String(now.getHours()).padStart(2, '0');
+        let rawH = now.getHours();
         const m = String(now.getMinutes()).padStart(2, '0');
         const s = String(now.getSeconds()).padStart(2, '0');
-        document.getElementById('clockDisplay').innerHTML = h + ':' + m + '<span style="font-size:clamp(30px,6vw,64px);opacity:.4">:' + s + '</span>';
+        let displayH, ampm = '';
+        if (clockFormat === '12') {
+          ampm = rawH >= 12 ? ' PM' : ' AM';
+          rawH = rawH % 12 || 12;
+          displayH = String(rawH).padStart(2, '0');
+        } else {
+          displayH = String(rawH).padStart(2, '0');
+        }
+        const h24 = String(now.getHours()).padStart(2, '0');
+        document.getElementById('clockDisplay').innerHTML = displayH + ':' + m +
+          '<span style="font-size:clamp(30px,6vw,64px);opacity:.4">:' + s + '</span>' +
+          (ampm ? '<span style="font-size:clamp(14px,2.5vw,28px);opacity:.6;margin-left:6px">' + ampm + '</span>' : '');
         document.getElementById('clockDate').textContent = days[now.getDay()] + ', ' + months[now.getMonth()] + ' ' + now.getDate();
-        document.getElementById('fullscreenTime').textContent = h + ':' + m + ':' + s;
+        document.getElementById('fullscreenTime').textContent = h24 + ':' + m + ':' + s;
         document.getElementById('fullscreenDate').textContent = days[now.getDay()] + ', ' + months[now.getMonth()] + ' ' + now.getDate();
         const offset = -now.getTimezoneOffset();
         const tzH = String(Math.floor(Math.abs(offset) / 60)).padStart(2, '0');
@@ -1150,6 +1762,10 @@
       renderAlarms();
 
       // ===== TIMER =====
+      function saveTimerState() {
+        if (timerState === 'idle') { localStorage.removeItem('clockly_timer'); return; }
+        localStorage.setItem('clockly_timer', JSON.stringify({ state: timerState, remaining: timerRemaining, total: timerTotal }));
+      }
       function adjustTimer(u, d) { const el = document.getElementById('timer' + u.toUpperCase()); let v = parseInt(el.value); if (u === 'h') v = ((v + d) % 24 + 24) % 24; else v = ((v + d) % 60 + 60) % 60; el.value = String(v).padStart(2, '0'); }
       function validateTimer(u) {
         const el = document.getElementById('timer' + u.toUpperCase());
@@ -1163,19 +1779,37 @@
       function formatTimer(s) { return String(Math.floor(s / 3600)).padStart(2, '0') + ':' + String(Math.floor((s % 3600) / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); }
       function toggleTimer() {
         const btn = document.getElementById('timerStartBtn');
-        if (timerState === 'idle') { timerTotal = getTimerInputSeconds(); if (timerTotal <= 0) return; timerRemaining = timerTotal; timerState = 'running'; document.getElementById('timerInput').style.display = 'none'; document.getElementById('timerRunDisplay').style.display = 'block'; document.getElementById('timerCountdown').textContent = formatTimer(timerRemaining); btn.innerHTML = '⏸ PAUSE'; btn.className = 'btn btn-outline'; timerInterval = setInterval(timerTick, 1000); }
-        else if (timerState === 'running') { clearInterval(timerInterval); timerState = 'paused'; btn.innerHTML = '▶ RESUME'; btn.className = 'btn btn-primary'; }
-        else if (timerState === 'paused') { timerState = 'running'; btn.innerHTML = '⏸ PAUSE'; btn.className = 'btn btn-outline'; timerInterval = setInterval(timerTick, 1000); }
+        if (timerState === 'idle') { timerTotal = getTimerInputSeconds(); if (timerTotal <= 0) return; timerRemaining = timerTotal; timerState = 'running'; document.getElementById('timerInput').style.display = 'none'; document.getElementById('timerRunDisplay').style.display = 'block'; document.getElementById('timerCountdown').textContent = formatTimer(timerRemaining); btn.innerHTML = '⏸ PAUSE'; btn.className = 'btn btn-outline'; timerInterval = setInterval(timerTick, 1000); saveTimerState(); }
+        else if (timerState === 'running') { clearInterval(timerInterval); timerState = 'paused'; btn.innerHTML = '▶ RESUME'; btn.className = 'btn btn-primary'; saveTimerState(); }
+        else if (timerState === 'paused') { timerState = 'running'; btn.innerHTML = '⏸ PAUSE'; btn.className = 'btn btn-outline'; timerInterval = setInterval(timerTick, 1000); saveTimerState(); }
       }
       function timerTick() {
-        timerRemaining--; if (timerRemaining <= 0) { timerRemaining = 0; clearInterval(timerInterval); timerState = 'idle'; document.getElementById('timerStartBtn').innerHTML = '▶ START'; document.getElementById('timerStartBtn').className = 'btn btn-primary'; timerDone(); }
+        timerRemaining--;
+        if (timerRemaining <= 0) { timerRemaining = 0; clearInterval(timerInterval); timerState = 'idle'; document.getElementById('timerStartBtn').innerHTML = '▶ START'; document.getElementById('timerStartBtn').className = 'btn btn-primary'; localStorage.removeItem('clockly_timer'); timerDone(); }
+        else { saveTimerState(); }
         document.getElementById('timerCountdown').textContent = formatTimer(timerRemaining);
         const p = timerTotal > 0 ? (timerRemaining / timerTotal) * 100 : 0; document.getElementById('timerProgressFill').style.width = p + '%';
         if (timerRemaining <= 10) { document.getElementById('timerCountdown').style.color = 'var(--error)'; document.getElementById('timerProgressFill').style.background = 'var(--error)'; }
         else { document.getElementById('timerCountdown').style.color = 'var(--on-surface)'; document.getElementById('timerProgressFill').style.background = 'var(--primary)'; }
       }
-      function timerDone() { try { if (timerRingInterval) clearInterval(timerRingInterval); timerAudioCtx = new (window.AudioContext || window.webkitAudioContext)(); isTimerRinging = true; let freq = 900; function playTimerBeep() { if (!timerAudioCtx || !isTimerRinging) return; const o = timerAudioCtx.createOscillator(), g = timerAudioCtx.createGain(); o.connect(g); g.connect(timerAudioCtx.destination); o.frequency.value = freq; o.type = 'sawtooth'; g.gain.setValueAtTime(.35, timerAudioCtx.currentTime); g.gain.exponentialRampToValueAtTime(.01, timerAudioCtx.currentTime + .5); o.start(); o.stop(timerAudioCtx.currentTime + .5); freq = freq === 900 ? 1100 : 900; } playTimerBeep(); timerRingInterval = setInterval(playTimerBeep, 650); } catch (e) { } document.getElementById('timerCountdown').textContent = "00:00:00"; document.getElementById('timerCountdown').style.color = 'var(--secondary)'; }
-      function resetTimer() { clearInterval(timerInterval); if (timerRingInterval) clearInterval(timerRingInterval); isTimerRinging = false; if (timerAudioCtx) { timerAudioCtx.close(); timerAudioCtx = null; } timerState = 'idle'; timerRemaining = 0; timerTotal = 0; document.getElementById('timerInput').style.display = 'flex'; document.getElementById('timerRunDisplay').style.display = 'none'; document.getElementById('timerStartBtn').innerHTML = '▶ START'; document.getElementById('timerStartBtn').className = 'btn btn-primary'; document.getElementById('timerCountdown').style.color = 'var(--on-surface)'; document.getElementById('timerProgressFill').style.width = '100%'; document.getElementById('timerProgressFill').style.background = 'var(--primary)'; }
+      function timerDone() { try { if (timerRingInterval) clearInterval(timerRingInterval); timerAudioCtx = new (window.AudioContext || window.webkitAudioContext)(); isTimerRinging = true; let freq = 900; function playTimerBeep() { if (!timerAudioCtx || !isTimerRinging) return; const o = timerAudioCtx.createOscillator(), g = timerAudioCtx.createGain(); o.connect(g); g.connect(timerAudioCtx.destination); o.frequency.value = freq; o.type = 'sawtooth'; g.gain.setValueAtTime(.35, timerAudioCtx.currentTime); g.gain.exponentialRampToValueAtTime(.01, timerAudioCtx.currentTime + .5); o.start(); o.stop(timerAudioCtx.currentTime + .5); freq = freq === 900 ? 1100 : 900; } playTimerBeep(); timerRingInterval = setInterval(playTimerBeep, 650); } catch (e) { } document.getElementById('timerCountdown').textContent = '00:00:00'; document.getElementById('timerCountdown').style.color = 'var(--secondary)'; }
+      function resetTimer() { clearInterval(timerInterval); if (timerRingInterval) clearInterval(timerRingInterval); isTimerRinging = false; if (timerAudioCtx) { timerAudioCtx.close(); timerAudioCtx = null; } timerState = 'idle'; timerRemaining = 0; timerTotal = 0; localStorage.removeItem('clockly_timer'); document.getElementById('timerInput').style.display = 'flex'; document.getElementById('timerRunDisplay').style.display = 'none'; document.getElementById('timerStartBtn').innerHTML = '▶ START'; document.getElementById('timerStartBtn').className = 'btn btn-primary'; document.getElementById('timerCountdown').style.color = 'var(--on-surface)'; document.getElementById('timerProgressFill').style.width = '100%'; document.getElementById('timerProgressFill').style.background = 'var(--primary)'; }
+      // Restore timer UI if a paused timer was saved
+      (function restoreTimer() {
+        if (!_timerSaved || _timerSaved.state === 'idle') return;
+        // Only restore paused state — never silently resume a running timer
+        timerState = 'paused';
+        timerRemaining = _timerSaved.remaining;
+        timerTotal = _timerSaved.total;
+        document.getElementById('timerInput').style.display = 'none';
+        document.getElementById('timerRunDisplay').style.display = 'block';
+        document.getElementById('timerCountdown').textContent = formatTimer(timerRemaining);
+        const p = timerTotal > 0 ? (timerRemaining / timerTotal) * 100 : 0;
+        document.getElementById('timerProgressFill').style.width = p + '%';
+        if (timerRemaining <= 10) { document.getElementById('timerCountdown').style.color = 'var(--error)'; document.getElementById('timerProgressFill').style.background = 'var(--error)'; }
+        document.getElementById('timerStartBtn').innerHTML = '▶ RESUME';
+        document.getElementById('timerStartBtn').className = 'btn btn-primary';
+      })();
 
       // ===== STOPWATCH =====
       function formatSW(ms) {
@@ -1211,6 +1845,7 @@
           formatSW(total) + '<span class="display-lg" style="color:var(--primary);margin-left:8px" id="swMs">' + formatSwMs(total) + '</span>';
         if (swRunning) swAnimFrame = requestAnimationFrame(updateSwDisplay);
       }
+
 
       function toggleStopwatch() {
         const btn = document.getElementById('swStartBtn');
@@ -1325,7 +1960,58 @@
       if (swResetBtn) swResetBtn.addEventListener('click', resetStopwatch);
       if (swLapBtn) swLapBtn.addEventListener('click', addLap);
       
-      // Add event listeners for manual input validation on alarm and timer
+      // ===== SETTINGS =====
+      function openSettings() {
+        document.getElementById('settingsOverlay').classList.add('active');
+        // Sync UI to current state
+        document.getElementById('themeDarkBtn').classList.toggle('active', currentTheme === 'dark');
+        document.getElementById('themeLightBtn').classList.toggle('active', currentTheme === 'light');
+        document.getElementById('fmt12Btn').classList.toggle('active', clockFormat === '12');
+        document.getElementById('fmt24Btn').classList.toggle('active', clockFormat === '24');
+        document.querySelectorAll('.accent-swatch').forEach(s => s.classList.toggle('active', s.dataset.accent === currentAccent));
+      }
+      function closeSettings() {
+        document.getElementById('settingsOverlay').classList.remove('active');
+      }
+      function setTheme(t) {
+        currentTheme = t;
+        localStorage.setItem('clockly_theme', t);
+        document.documentElement.classList.toggle('light', t === 'light');
+        document.getElementById('themeDarkBtn').classList.toggle('active', t === 'dark');
+        document.getElementById('themeLightBtn').classList.toggle('active', t === 'light');
+      }
+      function setClockFormat(f) {
+        clockFormat = f;
+        localStorage.setItem('clockly_fmt', f);
+        document.getElementById('fmt12Btn').classList.toggle('active', f === '12');
+        document.getElementById('fmt24Btn').classList.toggle('active', f === '24');
+        updateClock();
+      }
+      function setAccent(name, primary, onPrimary) {
+        currentAccent = name;
+        localStorage.setItem('clockly_accent', name);
+        localStorage.setItem('clockly_accent_primary', primary);
+        localStorage.setItem('clockly_accent_onPrimary', onPrimary);
+        document.documentElement.style.setProperty('--primary', primary);
+        document.documentElement.style.setProperty('--on-primary', onPrimary);
+        document.querySelectorAll('.accent-swatch').forEach(s => s.classList.toggle('active', s.dataset.accent === name));
+      }
+      // Restore settings on load
+      (function applySettings() {
+        if (currentTheme === 'light') document.documentElement.classList.add('light');
+        const savedPrimary = localStorage.getItem('clockly_accent_primary');
+        const savedOnPrimary = localStorage.getItem('clockly_accent_onPrimary');
+        if (savedPrimary) document.documentElement.style.setProperty('--primary', savedPrimary);
+        if (savedOnPrimary) document.documentElement.style.setProperty('--on-primary', savedOnPrimary);
+      })();
+      // Wire settings button and overlay close
+      const settingsBtn = document.querySelector('.header-actions button:last-child');
+      if (settingsBtn) settingsBtn.addEventListener('click', openSettings);
+      const settingsCloseBtn = document.getElementById('settingsCloseBtn');
+      if (settingsCloseBtn) settingsCloseBtn.addEventListener('click', closeSettings);
+      document.getElementById('settingsOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeSettings(); });
+
+      // ===== INPUT VALIDATION =====
       const alarmHourEl = document.getElementById('alarmHour');
       const alarmMinEl = document.getElementById('alarmMinute');
       const timerHEl = document.getElementById('timerH');
@@ -1338,6 +2024,110 @@
       if (timerMEl) { timerMEl.addEventListener('blur', () => validateTimer('m')); timerMEl.addEventListener('keydown', e => { if (!/[0-9]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') e.preventDefault(); }); }
       if (timerSEl) { timerSEl.addEventListener('blur', () => validateTimer('s')); timerSEl.addEventListener('keydown', e => { if (!/[0-9]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') e.preventDefault(); }); }
       
+      // ===== TASKS =====
+      let tasks = JSON.parse(localStorage.getItem('clockly_tasks') || '[]');
+      let tasksOpen = JSON.parse(localStorage.getItem('clockly_tasks_open') || 'true');
+
+      function saveTasks() {
+        localStorage.setItem('clockly_tasks', JSON.stringify(tasks));
+      }
+
+      function renderTasks() {
+        // Render to sidebar panel
+        const list = document.getElementById('taskList');
+        const badge = document.getElementById('tasksBadge');
+        const footer = document.getElementById('tasksFooterCount');
+        // Render to page (mobile)
+        const listPage = document.getElementById('taskListPage');
+        const pageCount = document.getElementById('tasksPageCount');
+
+        const remaining = tasks.filter(t => !t.done).length;
+        if (badge) badge.textContent = remaining > 0 ? remaining : tasks.length;
+        if (footer) footer.textContent = remaining + ' remaining';
+        if (pageCount) pageCount.textContent = remaining + ' remaining';
+
+        const emptyHtml = '<div class="tasks-empty">No tasks yet. Add one above!</div>';
+        const itemsHtml = tasks.length === 0 ? emptyHtml : tasks.map(t => `
+          <div class="task-item${t.done ? ' done' : ''}">
+            <label class="task-checkbox-wrap" title="${t.done ? 'Mark incomplete' : 'Mark complete'}">
+              <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTask(${t.id})" />
+              <span class="task-checkbox-vis"></span>
+            </label>
+            <span class="task-text">${escapeHtml(t.text)}</span>
+            <button class="task-del-btn" onclick="deleteTask(${t.id})" title="Delete task">✕</button>
+          </div>`).join('');
+
+        if (list) list.innerHTML = itemsHtml;
+        if (listPage) listPage.innerHTML = itemsHtml;
+      }
+
+      function escapeHtml(str) {
+        return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      }
+
+      function addTask(sourceId) {
+        const inputId = sourceId || 'taskInput';
+        const input = document.getElementById(inputId);
+        if (!input) return;
+        const text = input.value.trim();
+        if (!text) { input.focus(); return; }
+        tasks.unshift({ id: Date.now(), text, done: false });
+        input.value = '';
+        input.focus();
+        saveTasks(); renderTasks();
+      }
+
+      function toggleTask(id) {
+        const t = tasks.find(x => x.id === id);
+        if (t) { t.done = !t.done; saveTasks(); renderTasks(); }
+      }
+
+      function deleteTask(id) {
+        tasks = tasks.filter(x => x.id !== id);
+        saveTasks(); renderTasks();
+      }
+
+      function clearDoneTasks() {
+        tasks = tasks.filter(x => !x.done);
+        saveTasks(); renderTasks();
+      }
+
+      function applyTasksPanelState() {
+        const body = document.getElementById('tasksBody');
+        const chev = document.getElementById('tasksChevron');
+        if (body) body.classList.toggle('open', tasksOpen);
+        if (chev) chev.classList.toggle('open', tasksOpen);
+      }
+
+      const tasksPanelToggle = document.getElementById('tasksPanelToggle');
+      if (tasksPanelToggle) {
+        tasksPanelToggle.addEventListener('click', () => {
+          tasksOpen = !tasksOpen;
+          localStorage.setItem('clockly_tasks_open', JSON.stringify(tasksOpen));
+          applyTasksPanelState();
+        });
+      }
+
+      const taskAddBtn = document.getElementById('taskAddBtn');
+      const taskInputEl = document.getElementById('taskInput');
+      if (taskAddBtn) taskAddBtn.addEventListener('click', () => addTask('taskInput'));
+      if (taskInputEl) taskInputEl.addEventListener('keydown', e => { if (e.key === 'Enter') addTask('taskInput'); });
+
+      // Page (mobile) task input
+      const taskAddBtnPage = document.getElementById('taskAddBtnPage');
+      const taskInputPageEl = document.getElementById('taskInputPage');
+      if (taskAddBtnPage) taskAddBtnPage.addEventListener('click', () => addTask('taskInputPage'));
+      if (taskInputPageEl) taskInputPageEl.addEventListener('keydown', e => { if (e.key === 'Enter') addTask('taskInputPage'); });
+
+      const clearDoneBtn = document.getElementById('tasksClearDone');
+      if (clearDoneBtn) clearDoneBtn.addEventListener('click', clearDoneTasks);
+      const clearDoneBtnPage = document.getElementById('tasksClearDonePage');
+      if (clearDoneBtnPage) clearDoneBtnPage.addEventListener('click', clearDoneTasks);
+
+      // Init tasks panel
+      applyTasksPanelState();
+      renderTasks();
+
       // Expose key functions to the global scope to ensure inline handlers work across environments
       window.toggleStopwatch = toggleStopwatch;
       window.addLap = addLap;
@@ -1357,6 +2147,11 @@
       window.saveAlarm = saveAlarm;
       window.dismissAlarm = dismissAlarm;
       window.toggleFullscreen = toggleFullscreen;
+      window.setTheme = setTheme;
+      window.setClockFormat = setClockFormat;
+      window.setAccent = setAccent;
+      window.toggleTask = toggleTask;
+      window.deleteTask = deleteTask;
       });
     </script>
 
